@@ -7,7 +7,9 @@ import { getArticles } from '../../../articles';
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
-  return (await getArticles()).map(({ slug }) => ({ slug }));
+  const articles = await getArticles();
+  // Static export needs one path before the first article is published.
+  return articles.length ? articles.map(({ slug }) => ({ slug })) : [{ slug: '__empty__' }];
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
