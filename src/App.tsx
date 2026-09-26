@@ -356,7 +356,6 @@ export function App({ view = 'home', children }: { view?: 'home' | 'work' | 'abo
         <section className="editing" id="editing" aria-labelledby="editing-title">
           <div className="project-content">
             <div className="project-copy">
-              <span className="project-index">02 / 03</span>
               <h2 id="editing-title">Video editing</h2>
               <p>I mostly edit short-form videos, shaping footage through structure, pacing, and careful cuts.</p>
             </div>
@@ -367,7 +366,6 @@ export function App({ view = 'home', children }: { view?: 'home' | 'work' | 'abo
                 </div>
               </div>
               <div className="editing-controls">
-                <span aria-live="polite">{String(activeClip + 1).padStart(2, '0')} / {String(editingClips.length).padStart(2, '0')}</span>
                 <div>
                   <button type="button" aria-label="Previous video" onClick={() => setActiveClip((index) => (index + editingClips.length - 1) % editingClips.length)}>←</button>
                   <button type="button" aria-label="Next video" onClick={() => setActiveClip((index) => (index + 1) % editingClips.length)}>→</button>
@@ -379,11 +377,10 @@ export function App({ view = 'home', children }: { view?: 'home' | 'work' | 'abo
 
         <section className="work" id="work" ref={work} aria-label="Selected work">
           <div className="project-track">
-            {projects.map((project, index) => (
+            {projects.map((project) => (
               <article className="project" id={project.id} key={project.id}>
                 <div className="project-content">
                   <div className="project-copy">
-                    <span className="project-index">{String(index + 1).padStart(2, '0')} / {String(projects.length).padStart(2, '0')}</span>
                     <h2>{project.name}</h2>
                     <p>{project.description}</p>
                   </div>
