@@ -6,6 +6,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import Image from 'next/image';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { AnimatedThemeToggler } from './AnimatedThemeToggler';
 import { FooterShader } from './FooterShader';
 import { Signature } from '@/components/signature';
@@ -52,11 +53,120 @@ function ProjectMedia({ image, imageAlt, aspectRatio, video }: Pick<Project, 'im
   );
 }
 
+function HoverClip({ src, poster, title }: { src: string; poster: string; title: string }) {
+  const video = useRef<HTMLVideoElement>(null);
+  const [playing, setPlaying] = useState(false);
+
+  useEffect(() => {
+    const player = video.current;
+    if (!player) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) player.pause();
+    });
+    observer.observe(player);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div className={`hover-clip${playing ? ' is-playing' : ''}`}>
+      <video
+        ref={video}
+        src={src}
+        poster={poster}
+        aria-label={title}
+        controls
+        playsInline
+        loop
+        preload="metadata"
+        onPlay={() => setPlaying(true)}
+        onPause={() => setPlaying(false)}
+        onPointerEnter={(event) => {
+          if (event.pointerType !== 'touch') void event.currentTarget.play().catch(() => {});
+        }}
+        onPointerLeave={(event) => {
+          if (event.pointerType !== 'touch') event.currentTarget.pause();
+        }}
+      />
+      <Image src={poster} alt="" fill sizes="(max-width: 800px) 220px, 340px" aria-hidden="true" />
+    </div>
+  );
+}
+
+const contactLinks = [
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/zaid-ali-ansari/' },
+  { label: 'X', href: 'https://x.com/Screeendev' },
+  { label: 'Instagram', href: 'https://www.instagram.com/screen.dev/' },
+];
+
+function ContactButton() {
+  const [open, setOpen] = useState(false);
+  const reducedMotion = useReducedMotion();
+  const root = useRef<HTMLDivElement>(null);
+  const trigger = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const closeOutside = (event: PointerEvent) => {
+      if (!root.current?.contains(event.target as Node)) setOpen(false);
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setOpen(false);
+        trigger.current?.focus();
+      }
+    };
+    document.addEventListener('pointerdown', closeOutside);
+    document.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.removeEventListener('pointerdown', closeOutside);
+      document.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [open]);
+
+  return (
+    <motion.div
+      className="hero-contact"
+      ref={root}
+      initial={false}
+      animate={{ width: open ? 170 : 122 }}
+      transition={reducedMotion ? { duration: 0 } : { type: 'spring', stiffness: 400, damping: 30 }}
+    >
+      <motion.div
+        className="hero-contact-panel"
+        initial={false}
+        animate={{ height: open ? 178 : 44 }}
+        transition={reducedMotion ? { duration: 0 } : { type: 'spring', stiffness: 400, damping: 30 }}
+      >
+        <button ref={trigger} type="button" aria-expanded={open} aria-controls="hero-contact-links" onClick={() => setOpen((value) => !value)}>
+          Contact <span aria-hidden="true">↗</span>
+        </button>
+        <div className="hero-contact-links" id="hero-contact-links">
+          <AnimatePresence initial={false}>
+            {open && contactLinks.map((link, index) => (
+              <motion.a
+                key={link.label}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={reducedMotion ? { duration: 0 } : { duration: 0.2, delay: index * 0.05 }}
+              >
+                {link.label} <span aria-hidden="true">↗</span>
+              </motion.a>
+            ))}
+          </AnimatePresence>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 const editingClips = [
-  { number: '01', src: '', poster: '/projects/video-editing.png' },
-  { number: '02', src: '', poster: '' },
-  { number: '03', src: '', poster: '' },
-  { number: '04', src: '', poster: '' },
+  { title: 'Commerce & government', src: '/videos/commerce-and-government.mp4', poster: '/videos/commerce-and-government.jpg' },
+  { title: 'Microwave Edit', src: '/videos/microwave-edit.mp4', poster: '/videos/microwave-edit.jpg' },
+  { title: 'Moment of Inertia', src: '/videos/moment-of-inertia.mp4', poster: '/videos/moment-of-inertia.jpg' },
 ];
 
 // Dia-inspired rising spectrum: https://www.arlan.me/vault/dia-gradient
@@ -236,7 +346,7 @@ export function App({ view = 'home', children }: { view?: 'home' | 'work' | 'abo
                 <Signature text="Zaid" fontSize={16} color={dark ? '#fff' : '#000'} />
               </div>
               <div className="hero-actions">
-                <a href="https://x.com/Screeendev" target="_blank" rel="noopener noreferrer">Contact <span aria-hidden="true">↗</span></a>
+                <ContactButton />
                 <a href="/work">View my work <span aria-hidden="true">→</span></a>
               </div>
             </div>
@@ -253,17 +363,11 @@ export function App({ view = 'home', children }: { view?: 'home' | 'work' | 'abo
             <div className="editing-carousel" aria-label="Edited videos">
               <div className="editing-phone">
                 <div className="editing-stage">
-                  {editingClips[activeClip].src ? (
-                    <video key={editingClips[activeClip].src} src={editingClips[activeClip].src} poster={editingClips[activeClip].poster || undefined} controls playsInline preload="metadata" />
-                  ) : editingClips[activeClip].poster ? (
-                    <Image src={editingClips[activeClip].poster} alt="Temporary preview of a video editing workspace" fill sizes="(max-width: 800px) 220px, 340px" />
-                  ) : (
-                    <span className="editing-placeholder">Video {editingClips[activeClip].number}</span>
-                  )}
+                  <HoverClip key={editingClips[activeClip].src} {...editingClips[activeClip]} />
                 </div>
               </div>
               <div className="editing-controls">
-                <span aria-live="polite">{editingClips[activeClip].number} / 04</span>
+                <span aria-live="polite">{String(activeClip + 1).padStart(2, '0')} / {String(editingClips.length).padStart(2, '0')}</span>
                 <div>
                   <button type="button" aria-label="Previous video" onClick={() => setActiveClip((index) => (index + editingClips.length - 1) % editingClips.length)}>←</button>
                   <button type="button" aria-label="Next video" onClick={() => setActiveClip((index) => (index + 1) % editingClips.length)}>→</button>
