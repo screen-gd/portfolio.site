@@ -141,6 +141,7 @@ html[data-theme='dark'] .nav-actions a[aria-current='page'] { background: rgba(2
   width: 21px;
   height: 21px;
 }
+html:not([data-theme='dark']) .theme-icon-sun, html[data-theme='dark'] .theme-icon-moon { display: none; }
 html[data-magicui-theme-vt='active']::view-transition-old(root),
 html[data-magicui-theme-vt='active']::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
 html[data-magicui-theme-vt='active']::view-transition-new(root) { clip-path: var(--magicui-theme-vt-start); }

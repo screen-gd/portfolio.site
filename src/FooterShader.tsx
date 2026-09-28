@@ -130,12 +130,13 @@ fn blueNoise(p: vec2f, frame: f32) -> f32 {
   return vec4f(clamp(color, vec3f(0.0), vec3f(1.0)), 1.0);
 }`;
 
-export function FooterShader({ dark }: { dark: boolean }) {
+export function FooterShader({ dark }: { dark: boolean | null }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas || !navigator.gpu) return;
+    // Wait for the theme so the shader doesn't start light and switch.
+    if (dark === null || !canvas || !navigator.gpu) return;
 
     let disposed = false;
     let frame = 0;

@@ -15,28 +15,21 @@ import { projects, type Project } from './projects';
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
-function readTheme() {
-  try {
-    const saved = localStorage.getItem('sky-theme');
-    if (saved) return saved === 'dark';
-  } catch { /* Storage may be unavailable. */ }
-  return matchMedia('(prefers-color-scheme: dark)').matches;
-}
-
-function SkyCanvas({ dark }: { dark: boolean }) {
+// dark is null until the theme is read, so the sky starts in the right state instead of animating to it.
+function SkyCanvas({ dark }: { dark: boolean | null }) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const sky = useRef<SkyController>(null);
 
-  useEffect(() => {
-    if (!canvas.current) return;
-    sky.current = createSky(canvas.current, dark ? 0 : 1);
-    return () => {
-      sky.current?.dispose();
-      sky.current = null;
-    };
+  useEffect(() => () => {
+    sky.current?.dispose();
+    sky.current = null;
   }, []);
 
-  useEffect(() => sky.current?.setDay(dark ? 0 : 1), [dark]);
+  useEffect(() => {
+    if (dark === null || !canvas.current) return;
+    if (sky.current) sky.current.setDay(dark ? 0 : 1);
+    else sky.current = createSky(canvas.current, dark ? 0 : 1);
+  }, [dark]);
 
   return <canvas id="sky-canvas" ref={canvas} aria-hidden="true" />;
 }
@@ -174,7 +167,8 @@ const spectrumHeights = [90, 145, 225, 315, 405, 470, 510, 490, 435, 355, 265, 1
 
 
 export function App({ view = 'home', children }: { view?: 'home' | 'work' | 'about' | 'blog' | 'post'; children?: ReactNode }) {
-  const [dark, setDark] = useState(false);
+  // null until the theme set by the layout's head script is read.
+  const [dark, setDark] = useState<boolean | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const [activeClip, setActiveClip] = useState(0);
   const page = useRef<HTMLElement>(null);
@@ -183,7 +177,7 @@ export function App({ view = 'home', children }: { view?: 'home' | 'work' | 'abo
   const footerSpectrum = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
-    setDark(readTheme());
+    setDark(document.documentElement.dataset.theme === 'dark');
     const updateScroll = () => setScrolled(window.scrollY > 64);
     updateScroll();
     window.addEventListener('scroll', updateScroll, { passive: true });
@@ -191,15 +185,12 @@ export function App({ view = 'home', children }: { view?: 'home' | 'work' | 'abo
   }, []);
 
   useEffect(() => {
-    document.documentElement.dataset.theme = dark ? 'dark' : 'light';
-  }, [dark]);
-
-  useEffect(() => {
     const systemDark = matchMedia('(prefers-color-scheme: dark)');
     const syncSystemTheme = (event: MediaQueryListEvent) => {
       try {
         if (localStorage.getItem('sky-theme')) return;
       } catch { /* Follow the system theme. */ }
+      document.documentElement.dataset.theme = event.matches ? 'dark' : 'light';
       setDark(event.matches);
     };
     systemDark.addEventListener('change', syncSystemTheme);
@@ -302,7 +293,7 @@ export function App({ view = 'home', children }: { view?: 'home' | 'work' | 'abo
             <a href="/work" aria-current={view === 'work' ? 'page' : undefined}>Work</a>
             <a href="/about" aria-current={view === 'about' ? 'page' : undefined}>About</a>
             <a href="/blog" aria-current={view === 'blog' || view === 'post' ? 'page' : undefined}>Blog</a>
-            <AnimatedThemeToggler dark={dark} onThemeChange={changeTheme} />
+            <AnimatedThemeToggler dark={dark ?? false} onThemeChange={changeTheme} />
           </div>
         </nav>
       </header>
