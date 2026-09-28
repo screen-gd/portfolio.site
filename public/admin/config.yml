@@ -1,0 +1,26 @@
+# Blog editor at /admin. Saving commits the post (and uploaded images) to GitHub.
+backend:
+  name: github
+  repo: screen-gd/portfolio.site
+  branch: main
+
+media_folder: public/blog
+public_folder: /blog
+
+collections:
+  - name: blog
+    label: Blog
+    label_singular: Post
+    folder: content/blog
+    create: true
+    extension: md
+    format: frontmatter
+    slug: '{{slug}}'
+    summary: '{{title}}'
+    sortable_fields: [date, title]
+    fields:
+      - { name: title, label: Title, widget: string }
+      - { name: date, label: Date, widget: datetime, format: YYYY-MM-DD, time_format: false, picker_utc: true }
+      - { name: category, label: Category, widget: string, required: false }
+      - { name: cover, label: Cover image, widget: image, required: false, hint: Shown when the post is featured on the Blog page. }
+      - { name: body, label: Body, widget: markdown, hint: The first paragraph becomes the summary. Use Heading 2 for sections. Link an X post to show a hover preview. }

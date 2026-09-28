@@ -173,7 +173,7 @@ const editingClips = [
 const spectrumHeights = [90, 145, 225, 315, 405, 470, 510, 490, 435, 355, 265, 175, 105];
 
 
-export function App({ view = 'home', children }: { view?: 'home' | 'work' | 'about' | 'articles' | 'article'; children?: ReactNode }) {
+export function App({ view = 'home', children }: { view?: 'home' | 'work' | 'about' | 'blog' | 'post'; children?: ReactNode }) {
   const [dark, setDark] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeClip, setActiveClip] = useState(0);
@@ -301,7 +301,7 @@ export function App({ view = 'home', children }: { view?: 'home' | 'work' | 'abo
           <div className="nav-actions">
             <a href="/work" aria-current={view === 'work' ? 'page' : undefined}>Work</a>
             <a href="/about" aria-current={view === 'about' ? 'page' : undefined}>About</a>
-            <a href="/articles" aria-current={view === 'articles' || view === 'article' ? 'page' : undefined}>Articles</a>
+            <a href="/blog" aria-current={view === 'blog' || view === 'post' ? 'page' : undefined}>Blog</a>
             <AnimatedThemeToggler dark={dark} onThemeChange={changeTheme} />
           </div>
         </nav>
