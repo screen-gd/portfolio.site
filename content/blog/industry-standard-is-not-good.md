@@ -47,7 +47,7 @@ It can also kill innovation if the market stays focused on that one app.
 
 What [Chike](https://x.com/zellzoi_design/status/2101701620329247228) did is exactly what we need more of.
 
-He publicly dropped After Effects, the "industry standard", and showed people that an alternative can work better.
+Chike, made an alternative to After Effects, the "industry standard", and it works sooo good, & showed that it can work better.
 
 We don't need an "industry standard". We just need apps that can get our work done, and do it better.
 
