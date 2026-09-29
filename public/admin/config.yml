@@ -3,6 +3,9 @@ backend:
   name: github
   repo: screen-gd/portfolio.site
   branch: main
+  # Sign-in runs on this site's Worker (worker/index.ts), not Netlify.
+  base_url: https://zaid.us.ci
+  auth_endpoint: oauth/auth
 
 media_folder: public/blog
 public_folder: /blog
