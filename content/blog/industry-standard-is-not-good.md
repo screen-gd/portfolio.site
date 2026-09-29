@@ -1,5 +1,5 @@
 ---
-title: '"Industry standard" is not the same as "good"'
+title: '"Industry standard" should not lock us up.'
 date: 2026-09-29
 category: Software
 cover: /blog/industry-standard.jpg
