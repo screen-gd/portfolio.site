@@ -2,10 +2,12 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import { App } from '../../App';
 import { getBlogPosts, postDate, readingTime } from '../../blog';
+import { Breadcrumbs } from '../../components/Breadcrumbs';
 
 export const metadata: Metadata = {
   title: 'Blog | Screen',
   description: 'Writing by Zaid on products, video, and creative work.',
+  alternates: { canonical: '/blog' },
 };
 
 export default async function BlogPage() {
@@ -15,6 +17,7 @@ export default async function BlogPage() {
   return (
     <App view="blog">
       <section className="content-page articles-page" aria-labelledby="blog-title">
+        <Breadcrumbs items={[{ label: 'Blog', href: '/blog' }]} />
         <h1 id="blog-title">Blog</h1>
         <p className="page-lead">Notes on making web products, videos, and games.</p>
         {featured ? (

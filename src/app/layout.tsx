@@ -1,11 +1,15 @@
 import type { Metadata } from 'next';
+import { siteUrl } from '../site';
 import '@fontsource-variable/outfit';
 import 'lenis/dist/lenis.css';
 import '../style.css';
 
 export const metadata: Metadata = {
   title: 'Screen | Portfolio',
-  description: 'Projects, experiments, and writing under one changing sky.',
+  description: 'Zaid builds web products and edits short-form videos. Explore his projects, editing work, and writing.',
+  metadataBase: new URL(siteUrl),
+  authors: [{ name: 'Zaid', url: `${siteUrl}/about` }],
+  robots: { follow: true },
 };
 
 // Runs before first paint so pages never flash the wrong theme.

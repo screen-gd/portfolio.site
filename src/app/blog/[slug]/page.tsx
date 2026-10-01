@@ -6,6 +6,7 @@ import { App } from '../../../App';
 import { TweetLink } from '../../../TweetLink';
 import { getBlogPosts, headingId, postDate, readingTime } from '../../../blog';
 import { getTweets, type Tweet } from '../../../tweets';
+import { Breadcrumbs } from '../../../components/Breadcrumbs';
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -36,7 +37,10 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = (await getBlogPosts()).find((entry) => entry.slug === slug);
-  return post ? { title: `${post.title} | Screen`, description: post.summary } : {};
+  return post ? {
+    title: `${post.title} | Screen`, description: post.summary,
+    alternates: { canonical: `/blog/${post.slug}` },
+  } : {};
 }
 
 export default async function BlogPostPage({ params }: Props) {
@@ -48,6 +52,7 @@ export default async function BlogPostPage({ params }: Props) {
   return (
     <App view="post">
       <article className="content-page post-page">
+        <Breadcrumbs items={[{ label: 'Blog', href: '/blog' }, { label: post.title, href: `/blog/${post.slug}` }]} />
         <header className="post-header">
           <a className="back-link" href="/blog"><span className="back-arrow" aria-hidden="true" />Blog</a>
           <div className="article-meta">
@@ -59,6 +64,7 @@ export default async function BlogPostPage({ params }: Props) {
         </header>
         <hr className="post-divider" />
         <div className="article-body"><ReactMarkdown components={markdownComponents(tweets)}>{post.body}</ReactMarkdown></div>
+        <aside className="post-author">Written by <a href="/about">Zaid</a>, product developer and video editor.</aside>
       </article>
     </App>
   );

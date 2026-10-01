@@ -6,10 +6,12 @@ import { AboutShader } from '../../AboutShader';
 import { StackGravity } from '../../StackGravity';
 import { Badge } from '../../components/ui/badge';
 import { Card } from '../../components/ui/card';
+import { Breadcrumbs } from '../../components/Breadcrumbs';
 
 export const metadata: Metadata = {
   title: 'About | Screen',
-  description: 'Zaid’s work, experience, education, and tools.',
+  description: 'Zaid’s work, experience, and tools.',
+  alternates: { canonical: '/about' },
 };
 
 export default function AboutPage() {
@@ -19,6 +21,7 @@ export default function AboutPage() {
         <div className="about-stage"><AboutShader /><AboutFan /></div>
 
         <div className="about-column">
+          <Breadcrumbs items={[{ label: 'About', href: '/about' }]} />
           <Card className="about-bio">
             <h1 id="about-title">Hello! I’m <span>Zaid.</span></h1>
             <p>I’m a <strong>product developer and video editor</strong> with a background in design. I build web products that help people work faster and edit videos that grab attention.</p>
@@ -47,17 +50,11 @@ export default function AboutPage() {
               </Card>
               <Card className="about-row">
                 <span className="about-monogram about-logo-studios" aria-hidden="true"><Image src="/logos/zns-studios-transparent.png" alt="" fill sizes="48px" /></span>
-                <span className="about-row-copy"><strong>ZNS Studios &amp; ZNS Nexus</strong><span>COO and co-founder <b aria-hidden="true">·</b> Since September 3, 2025</span></span>
+                <span className="about-row-copy"><strong>ZNS Studios</strong><span>COO and co-founder <b aria-hidden="true">·</b> Since September 3, 2025</span></span>
               </Card>
-            </div>
-          </section>
-
-          <section className="about-group" aria-labelledby="education-title">
-            <h2 id="education-title">Education</h2>
-            <div className="about-box">
               <Card className="about-row">
-                <span className="about-monogram" aria-hidden="true">S</span>
-                <span className="about-row-copy"><strong>St. Anthony High School &amp; Junior College of Arts, Commerce &amp; Science</strong><span>12th HSC <b aria-hidden="true">·</b> Mumbai, Maharashtra</span></span>
+                <span className="about-monogram about-wordmark" aria-hidden="true">ZNS<br />Nexus</span>
+                <span className="about-row-copy"><strong>ZNS Nexus</strong><span>COO and co-founder <b aria-hidden="true">·</b> Since September 3, 2025</span></span>
               </Card>
             </div>
           </section>
