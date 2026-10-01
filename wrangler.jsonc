@@ -1,5 +1,5 @@
 {
-  "name": "screen-portfolio",
+  "name": "site-portfolio",
   "compatibility_date": "2026-09-26",
   "main": "./worker/index.ts",
   "build": {

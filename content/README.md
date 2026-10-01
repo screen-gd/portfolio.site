@@ -7,7 +7,7 @@ Open `/admin` on the live site and choose **Sign in with GitHub**. You can also 
 GitHub sign-in is handled by the site's Worker (`worker/index.ts`) and needs a one-time setup:
 
 1. Create a GitHub OAuth app (GitHub → Settings → Developer settings → OAuth Apps → New OAuth App). Set **Homepage URL** to `https://zaid.us.ci` and **Authorization callback URL** to `https://zaid.us.ci/oauth/callback`.
-2. Generate a client secret, then add both values to the `screen-portfolio` Worker as secrets named `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` (Cloudflare dashboard → Workers → screen-portfolio → Settings → Variables and Secrets, or `npx wrangler secret put GITHUB_CLIENT_ID`).
+2. Generate a client secret, then add both values to the `site-portfolio` Worker as secrets named `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` (Cloudflare dashboard → Workers → site-portfolio → Settings → Variables and Secrets, or `npx wrangler secret put GITHUB_CLIENT_ID`).
 
 - **New post** creates a Markdown file in `content/blog/`.
 - Images you upload (cover or inline) are saved in `public/blog/`.
