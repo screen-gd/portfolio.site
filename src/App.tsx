@@ -488,7 +488,6 @@ export function App({ view = 'home', children }: { view?: 'home' | 'work' | 'abo
           <div className="nav-actions">
             <a href="/work" aria-current={view === 'work' ? 'page' : undefined}>Work</a>
             <a href="/about" aria-current={view === 'about' ? 'page' : undefined}>About</a>
-            <a href="/blog" aria-current={view === 'blog' || view === 'post' ? 'page' : undefined}>Blog</a>
             <AnimatedThemeToggler dark={dark ?? false} onThemeChange={changeTheme} />
           </div>
         </nav>
